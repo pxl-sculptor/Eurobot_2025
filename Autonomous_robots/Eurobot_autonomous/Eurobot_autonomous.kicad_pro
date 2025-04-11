@@ -383,7 +383,7 @@
       "idf": "",
       "netlist": "",
       "specctra_dsn": "",
-      "step": "Eurobot_autonomous.step",
+      "step": "../3D_Models/Eurobot_autonomous.step",
       "vrml": ""
     },
     "page_layout_descr_file": ""
