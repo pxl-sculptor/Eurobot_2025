@@ -8,7 +8,7 @@ void setup() {
   Wire.begin(I2C_ADDRESS);
   Wire.onReceive(receiveData);
   Serial.println("Mega I2C Slave ready");
-}
+} 
 
 void loop() {
   delay(100);
@@ -34,6 +34,8 @@ void receiveData(int byteCount) {
     memcpy(&float1, &buffer[12], 4);
     memcpy(&float2, &buffer[16], 4);
     memcpy(&float3, &buffer[20], 4);
+    Serial.println(float1);
   }
+  
 
 }

@@ -58,22 +58,30 @@ void loop()
 
   x4=((sec_wheels_x2_1-sec_wheels_x1_1)*(sec_wheels_y2_1-sec_wheels_y1_1)*(stic_y-sec_wheels_y1_1)+sec_wheels_x1_1*pow(sec_wheels_y2_1-sec_wheels_y1_1, 2)+stic_x*pow(sec_wheels_x2_1-sec_wheels_x1_1, 2))/(pow(sec_wheels_y2_1-sec_wheels_y1_1, 2)+pow(sec_wheels_x2_1-sec_wheels_x1_1, 2));
   y4=(sec_wheels_y2_1-sec_wheels_y1_1)*(x4-sec_wheels_x1_1)/(sec_wheels_x2_1-sec_wheels_x1_1)+sec_wheels_y1_1;
-  eng1_F = ((pow((pow((x4-eng_x_1), 2) + pow((y4-eng_y_1), 2)), 0.5)) / L);
+  eng1_F = (((pow((pow((x4-eng_x_1), 2) + pow((y4-eng_y_1), 2)), 0.5)) / L)) * 255;
   eng1_dir = DIR(stic_y - ((axis_y2_1-axis_y1_1)*(((axis_x2_1-axis_x1_1)*(axis_y2_1-axis_y1_1)*(stic_y-axis_y1_1)+axis_x1_1*pow(axis_y2_1-axis_y1_1, 2)+stic_x*pow(axis_x2_1-axis_x1_1, 2))/(pow(axis_y2_1-axis_y1_1, 2)+pow(axis_x2_1-axis_x1_1, 2))-axis_x1_1)/(axis_x2_1-axis_x1_1)+axis_y1_1));
 
   x5=((sec_wheels_x2_2-sec_wheels_x1_2)*(sec_wheels_y2_2-sec_wheels_y1_2)*(stic_y-sec_wheels_y1_2)+sec_wheels_x1_2*pow(sec_wheels_y2_2-sec_wheels_y1_2, 2)+stic_x*pow(sec_wheels_x2_2-sec_wheels_x1_2, 2))/(pow(sec_wheels_y2_2-sec_wheels_y1_2, 2)+pow(sec_wheels_x2_2-sec_wheels_x1_2, 2));
   y5=(sec_wheels_y2_2-sec_wheels_y1_2)*(x5-sec_wheels_x1_2)/(sec_wheels_x2_2-sec_wheels_x1_2)+sec_wheels_y1_2;
-  eng2_F = ((pow((pow((x5-eng_x_2), 2) + pow((y5-eng_y_2), 2)), 0.5)) / L);
+  eng2_F = (((pow((pow((x5-eng_x_2), 2) + pow((y5-eng_y_2), 2)), 0.5)) / L)) * 255;
   eng2_dir = DIR(stic_y - ((axis_y2_2-axis_y1_2)*(((axis_x2_2-axis_x1_2)*(axis_y2_2-axis_y1_2)*(stic_y-axis_y1_2)+axis_x1_2*pow(axis_y2_2-axis_y1_2, 2)+stic_x*pow(axis_x2_2-axis_x1_2, 2))/(pow(axis_y2_2-axis_y1_2, 2)+pow(axis_x2_2-axis_x1_2, 2))-axis_x1_2)/(axis_x2_2-axis_x1_2)+axis_y1_2));
 
   x6=((sec_wheels_x2_3-sec_wheels_x1_3)*(sec_wheels_y2_3-sec_wheels_y1_3)*(stic_y-sec_wheels_y1_3)+sec_wheels_x1_3*pow(sec_wheels_y2_3-sec_wheels_y1_3, 2)+stic_x*pow(sec_wheels_x2_3-sec_wheels_x1_3, 2))/(pow(sec_wheels_y2_3-sec_wheels_y1_3, 2)+pow(sec_wheels_x2_3-sec_wheels_x1_3, 2));
   y6=(sec_wheels_y2_3-sec_wheels_y1_3)*(x6-sec_wheels_x1_3)/(sec_wheels_x2_3-sec_wheels_x1_3)+sec_wheels_y1_3;
-  eng3_F = ((pow((pow((x6-eng_x_3), 2) + pow((y6-eng_y_3), 2)), 0.5)) / L);
+  eng3_F = (((pow((pow((x6-eng_x_3), 2) + pow((y6-eng_y_3), 2)), 0.5)) / L)) * 255;
   eng3_dir = DIR(axis_x1_3 - stic_x);
 
-  if (eng1_F > 1) eng1_F = 1;
-  if (eng2_F > 1) eng2_F = 1;
-  if (eng3_F > 1) eng3_F = 1;
+  if (eng1_F > 255) eng1_F = 255;
+  if (eng2_F > 255) eng2_F = 255;
+  if (eng3_F > 255) eng3_F = 255;
+
+  static_cast <int> (eng1_F);
+  static_cast <int> (eng2_F);
+  static_cast <int> (eng3_F);
+
+  if (eng1_dir) eng1_F = map(eng1_F, 0, 255, 255, 0);
+  if (eng2_dir) eng2_F = map(eng2_F, 0, 255, 255, 0);
+  if (eng3_dir) eng3_F = map(eng3_F, 0, 255, 255, 0);
 
   byte buffer[DATA_SIZE];
   
@@ -84,8 +92,13 @@ void loop()
   memcpy(&buffer[16], &eng2_F, 4);
   memcpy(&buffer[20], &eng3_F, 4);
 
+  Serial.println(eng1_F);
+  Serial.println(eng1_dir);
+
   // Отправка данных
   Wire.beginTransmission(I2C_ADDRESS);
   Wire.write(buffer, DATA_SIZE);
   byte error = Wire.endTransmission();
+  Serial.println(eng1_F);
+  delay(10);
 }
