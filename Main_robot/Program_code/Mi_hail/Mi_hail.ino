@@ -2,6 +2,8 @@
 #include <Servo.h>
 #include <esp_bt_defs.h>
 
+int servo1Pin = , servo1Pin = , servo1Pin = , servo1Pin = , servo1Pin = ;
+
 const int relayPins[] = {22, 23, 24, 25};
 const int numRelays = 4;
 boolean relayStates[4] = {LOW, LOW, LOW, LOW};

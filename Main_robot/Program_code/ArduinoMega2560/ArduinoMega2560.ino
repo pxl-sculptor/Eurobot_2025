@@ -5,7 +5,7 @@
 
 int eng1Pin1 = 4, eng1Pin2 = 5;
 int eng2Pin1 = 2, eng2Pin2 = 3;
-int eng3Pin1 = 9, eng3Pin2 = 8;
+int eng3Pin1 = 8, eng3Pin2 = 9;
 
 int eng1_dir, eng2_dir, eng3_dir;
 float eng1_F, eng2_F, eng3_F;
@@ -54,7 +54,7 @@ void receiveData(int byteCount) {
     memcpy(&eng1_F, &buffer[12], 4);
     memcpy(&eng2_F, &buffer[16], 4);
     memcpy(&eng3_F, &buffer[20], 4);
-    Serial.println(eng1_F);
+    Serial.println(eng3_F);
 
     newDataAvailable = true;
   }
