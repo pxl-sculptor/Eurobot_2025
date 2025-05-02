@@ -1,15 +1,15 @@
-#include <PS4Controller.h>
+//#include <PS4Controller.h>
 #include <Servo.h>
-#include <esp_bt_defs.h>
+//#include <esp_bt_defs.h>
 
-int servo1Pin = , servo1Pin = , servo1Pin = , servo1Pin = , servo1Pin = ;
+//int servo1Pin = , servo1Pin = , servo1Pin = , servo1Pin = , servo1Pin = ;
 
 const int relayPins[] = {22, 23, 24, 25};
 const int numRelays = 4;
 boolean relayStates[4] = {LOW, LOW, LOW, LOW};
 boolean bottonPressed = false;
 
-PS4Controller ps4;
+//PS4Controller ps4;
 Servo servo1;
 Servo servo2;
 Servo servo3;
@@ -19,15 +19,15 @@ Servo servo5;
 void setup() {
   for (int i = 0; i < numRelays; i++) {
     pinMode(relayPins[i], OUTPUT);
-    servo1.attach(26);
-    servo2.attach(27);
-    servo3.attach(28);
-    servo4.attach(29);
-    servo5.attach(30);
+  servo1.attach(26);
+  servo2.attach(27);
+  servo3.attach(28);
+  servo4.attach(29);
+  servo5.attach(30);
   }
 }
 void loop() {
-  ps4.update();
+  /*ps4.update();
   if (ps4.getButton(PS4_BUTTON_CROSS)) {
     relayStates[0] = !relayStates[0];
     digitalWrite(relayPins[0], relayStates[0]);
@@ -63,6 +63,6 @@ void loop() {
     } else {
       servo5.write(90);
     }
-  }
+  }*/
 }
 
