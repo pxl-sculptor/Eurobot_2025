@@ -1,8 +1,11 @@
 #include <Wire.h>
 #include <Servo.h>
+#include <LiquidCrystal.h>
 
 #define I2C_ADDRESS 0x08
-#define DATA_SIZE 24
+#define DATA_SIZE 25
+
+LiquidCrystal lcd(53, 51, 49, 47, 45, 43);
 
 Servo servoL1;
 Servo servoL2;
@@ -20,15 +23,19 @@ bool eng1_dir, eng2_dir, eng3_dir, lift_dir;
 float eng1_F, eng2_F, eng3_F, lift_F;
 bool newDataAvailable = false,  // Флаг новых данных
   magn, servoL, servoM,
-     up, down;
+     L_dir, R, value_flag_R = false, value_flag_L = false;
 
 int angle_closeL1 = 20, angle_openL1 = 60, angle_closeL2 = 160, angle_openL2 = 120,
-    angle_closeM1 = 0, angle_openM1 = 180, angle_closeM2 = 0, angle_openM2 = 180;
+    angle_closeM1 = 0, angle_openM1 = 180, angle_closeM2 = 0, angle_openM2 = 180,
+    value = 60;
 
 void setup() {
   Serial.begin(115200);
   Wire.begin(I2C_ADDRESS);
   Wire.onReceive(receiveData);
+
+  lcd.begin(8, 2);
+  lcd.print("\xA5O\x48  ION");
 
   servoL1.attach(10);
   servoL2.attach(11);
@@ -54,8 +61,19 @@ void setup() {
 }
 void loop() {
   if (newDataAvailable) {
-    Serial.println(lift_F);
-    Serial.println(lift_dir);
+    Serial.println(value);
+
+    if (L_dir and !value_flag_L) {
+      value_flag_L = true;
+      value -= 1;
+    }
+    if (!L_dir and value_flag_L) value_flag_L = false;
+
+    if (R and !value_flag_R) {
+      value_flag_R = true;
+      value += 10;
+    }
+    if (!R and value_flag_R) value_flag_R = false;
 
     digitalWrite(eng1Pin1, eng1_dir);
     analogWrite(eng1Pin2, eng1_F);
@@ -90,6 +108,12 @@ void loop() {
 
     newDataAvailable = false;  // Сбрасываем флаг
   }
+
+  lcd.setCursor(0, 1);
+  lcd.print("   ");
+  lcd.print(value);
+  lcd.print("   ");
+
   delay(10);
 }
 
@@ -112,11 +136,9 @@ void receiveData(int byteCount) {
     memcpy(&servoM, &buffer[17], 1);
     memcpy(&lift_F, &buffer[18], 4);
     memcpy(&lift_dir, &buffer[22], 1);
-    //memcpy(&up, &buffer[17], 1);
-    //memcpy(&down, &buffer[18], 1);
-
-    Serial.println(servoL);
-
+    memcpy(&L_dir, &buffer[23], 1);
+    memcpy(&R, &buffer[24], 1);
+    Serial.println(L_dir);
     newDataAvailable = true;
   }
 }

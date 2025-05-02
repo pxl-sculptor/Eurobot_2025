@@ -39,7 +39,7 @@ int min_4(int min, int a, int b, int c) {
 #include <Wire.h>
 
 #define I2C_ADDRESS 0x08
-#define DATA_SIZE 24
+#define DATA_SIZE 25
 
 unsigned long lastTimeStamp = 0;
 
@@ -49,7 +49,7 @@ bool eng1_dir, eng2_dir, eng3_dir, lift_dir,
   magn = false, magn_flag = false,
   servoL = false, servoL_flag = false,
   servoM = false, servoM_flag = false,
-  up, down;
+  L_dir, R;
 
 float k = 0.8,
       eng1_F, eng2_F, eng3_F, lift_F, x4, y4, x5, y5, x6, y6,
@@ -88,8 +88,8 @@ void setup() {
 void loop() {
   if (millis() - lastTimeStamp > 50) lastTimeStamp = millis();
 
-  //up = PS4.Triangle();
-  //down = PS4.Cross();
+  L_dir = PS4.L2();
+  R = PS4.R2();
 
   stic_x = PS4.LStickX();
   stic_y = PS4.LStickY();
@@ -202,6 +202,8 @@ void loop() {
   memcpy(&buffer[17], &servoM, 1);
   memcpy(&buffer[18], &lift_F, 4);
   memcpy(&buffer[22], &lift_dir, 1);
+  memcpy(&buffer[23], &L_dir, 1);
+  memcpy(&buffer[24], &R, 1);
   //memcpy(&buffer[17], &up, 1);
   //memcpy(&buffer[18], &down, 1);
 
